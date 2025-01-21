@@ -25,34 +25,29 @@ public class ProductExcelHelper {
     public static List<Product> convertExcelToListOfProduct(InputStream inputStream) {
         List<Product> list = new ArrayList<>();
         try {
+             XSSFWorkbook workbook =  new XSSFWorkbook(inputStream);
 
-              XSSFWorkbook workbook =  new XSSFWorkbook(inputStream);
               XSSFSheet sheet =  workbook.getSheet("data");
 
               int rowNumber = 0;
-              Iterator<Row> iterator = sheet.iterator();
 
-              //to skip the header row
-              while (iterator.hasNext()){
-                  Row row = iterator.next();
-                  if(rowNumber == 0){
-                      rowNumber++;
-                      continue;
-                  }
+            for (Row row : sheet) {
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
 
-                  //iterate over cells in a row
-                  Iterator<Cell> cells = row.iterator();
-                  int cellId = 0;
-                  Product product = new Product();
+                Iterator<Cell> cells = row.iterator();
+                int cellId = 0;
+                Product product = new Product();
 
-                  //reading cell value and mapping to the product
-                  while (cells.hasNext()){
+                while (cells.hasNext()) {
                     Cell cell = cells.next();
 
-                    switch (cellId){
+                    switch (cellId) {
 
                         case 0:
-                            product.setProductId((long)cell.getNumericCellValue());
+                            product.setProductId((long) cell.getNumericCellValue());
                             break;
                         case 1:
                             product.setProductName(cell.getStringCellValue());
@@ -69,11 +64,9 @@ public class ProductExcelHelper {
                     }
                     cellId++;
 
-                  }
-                  list.add(product);
-              }
-
-
+                }
+                list.add(product);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
